@@ -1,5 +1,6 @@
 from exceptions.database import PermissionLevelNotAccept
 from config import env
+from .connection import cache
 
 from motor.motor_asyncio import AsyncIOMotorDatabase
 
@@ -19,3 +20,8 @@ async def clear_db(database: AsyncIOMotorDatabase) -> None:
 
     for collection in collections:
         await database.get_collection(collection).drop()
+
+    async with cache as _:
+        items = await _.keys()
+
+        await _.delete(*items)

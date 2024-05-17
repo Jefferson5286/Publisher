@@ -4,6 +4,7 @@ from config import env
 
 from odmantic.engine import AIOEngine
 from motor.motor_asyncio import AsyncIOMotorClient
+from redis.asyncio.client import Redis
 
 
 class Database:
@@ -64,7 +65,9 @@ class Database:
 database_url: Dict[Literal['DEBUG', 'TEST', 'RELEASE'], AnyStr] = {
     'TEST': 'mongodb://localhost:27017/',
     'DEBUG': 'mongodb://localhost:27017/',
-    'RELEASE': ''
+    'RELEASE': env.MONGODB_URL
 }
 
+
 database = Database('Publisher', database_url, env.LEVEL)
+cache = Redis.from_url(f'redis://{env.REDIS_USERNAME}:{env.REDIS_PASSWORD}@{env.REDIS_ENDPOINT}/0')
